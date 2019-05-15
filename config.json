@@ -7,37 +7,35 @@
         },
         {                                
             "type": "api",
-            "api_type": "banking_exchange_rates",
+            "api_name": "openexchangerates_exchange_rates",
             "site_name": "openexchangerates",            
             "site_domain": "https://openexchangerates.org",            
-            "is_default": "True",
             "api_url": "/api/historical/",
             "api_extension": ".json",         
             "api_params": [
                 {
                     "param_name": "app_id",
-                    "default_vaule": "e1e21981345b4bbe959f49186802ce97"
+                    "default_value": "e1e21981345b4bbe959f49186802ce97"
                 },
                 {
                     "param_name": "base",
-                    "default_vaule": "USD"
+                    "default_value": "USD"
                 }
             ]
         },
         {       
             "type": "api",
-            "api_type": "banking_exchange_rates",
+            "api_name": "exchangeratesapi_exchange_rates",
             "site_name": "exchangeratesapi",            
-            "site_domain": "https://api.exchangeratesapi.io",            
-            "is_default": "False",
+            "site_domain": "https://api.exchangeratesapi.io",    
             "api_url": "/",
             "api_extension": ".json",         
             "api_params": [               
                 {
                     "param_name": "base",
-                    "default_vaule": "USD"
+                    "default_value": "USD"
                 }
             ]
-        },
+        }
     ]
 }

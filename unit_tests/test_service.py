@@ -14,26 +14,34 @@ from config import Configuration
 
 from service.banking.exchangerate_service import ExchangeRateService
 
-class UtilityTestCase(unittest.TestCase):
+class ServiceTestCase(unittest.TestCase):
 
     UtilCommon = Core_UtilityCommon()
     UtilData = Core_UtilityData()
     Config = Configuration()
 
-    def test_common__validateDateFormat(self):
-                       
-        self.assertTrue(UtilityTestCase.UtilCommon.validateDateFormat('2016-01-15'), '###Error Message: Not valid')
+    
 
-        self.assertFalse(UtilityTestCase.UtilCommon.validateDateFormat('2016-01-32'), '###Error Message: Not valid')
+    def test_exrate__get_exrate_byDate(self):
 
-        self.assertFalse(UtilityTestCase.UtilCommon.validateDateFormat('2016-13-01'), '###Error Message: Not valid')
+        datereport = '2016-01-15'
+        baseCurrency = 'USD'
 
-        self.assertFalse(UtilityTestCase.UtilCommon.validateDateFormat('2019-2-30'), '###Error Message: Not valid')
+        service = ExchangeRateService()
+        data = service.get_exrate_byDate(datereport, baseCurrency)
 
-    def test_data__readJsonFromUrl(self):
+        self.assertIsNotNone(data, '###Error Message: No data')
+    
 
-        data = UtilityTestCase.UtilData.readJsonFromUrl("https://openexchangerates.org/api/historical/2001-02-16.json?app_id=e1e21981345b4bbe959f49186802ce97")
+    def test_exrate__get_specific_exrate_byDate(self):
 
+        datereport = '2016-01-15'
+        baseCurrency = 'USD'
+        toCurrency = 'VND'
+
+        service = ExchangeRateService()
+        data = service.get_specific_exrate_byDate(datereport, baseCurrency, toCurrency)
+               
         self.assertIsNotNone(data, '###Error Message: No data')
 
         
