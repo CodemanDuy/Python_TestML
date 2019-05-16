@@ -21,27 +21,43 @@ class ServiceTestCase(unittest.TestCase):
     Config = Configuration()
 
     
+    # def test_exrate__get_exrate_byDate(self):
 
-    def test_exrate__get_exrate_byDate(self):
+    #     datereport = '2016-01-15'
+    #     baseCurrency = 'USD'
 
-        datereport = '2016-01-15'
-        baseCurrency = 'USD'
+    #     service = ExchangeRateService()
+    #     data = service.get_exrate_byDate(datereport, baseCurrency)
 
-        service = ExchangeRateService()
-        data = service.get_exrate_byDate(datereport, baseCurrency)
-
-        self.assertIsNotNone(data, '###Error Message: No data')
+    #     self.assertIsNotNone(data, '###Error Message: No data')
     
 
-    def test_exrate__get_specific_exrate_byDate(self):
+    # def test_exrate__get_specific_exrate_byDate(self):
 
-        datereport = '2016-01-15'
+    #     datereport = '2016-01-15'
+    #     baseCurrency = 'USD'
+    #     toCurrency = 'VND'
+
+    #     service = ExchangeRateService()
+    #     data = service.get_specific_exrate_byDate(datereport, baseCurrency, toCurrency)
+               
+    #     self.assertIsNotNone(data, '###Error Message: No data')
+
+    
+    def test_exrate__get_specific_exrate_byDateRange(self):
+
+        fromDate = '2016-01-1'        
+        toDate = '2016-12-30'
+        checkedDate = [15, 5, 10, 20]
         baseCurrency = 'USD'
         toCurrency = 'VND'
 
         service = ExchangeRateService()
-        data = service.get_specific_exrate_byDate(datereport, baseCurrency, toCurrency)
-               
+        data = service.get_specific_exrate_byDateRange(fromDate, toDate, checkedDate, baseCurrency, toCurrency)
+
+        # service.display_graph(data)
+        service.training_model(data)
+
         self.assertIsNotNone(data, '###Error Message: No data')
 
         

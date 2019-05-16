@@ -1,8 +1,8 @@
-
+# Facade Pattern
 """
 doc: Model class with the decorator
 """
-class ApiParamConfigModel(object):
+class ConfigApiParamModel(object):
     """
     A data descriptor that sets and returns values normally and optional prints a message logging their access.
     """

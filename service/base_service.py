@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(ROOT_DIR + r'/'))# Add absolute path to current 
 from core_utils.util_common import Core_UtilityCommon
 from core_utils.util_data import Core_UtilityData
 
-from domains.domain_container import DomainContainer
+from domains.domain_factory import DomainFactory
 from config import Configuration
 
 """
@@ -22,8 +22,8 @@ class BaseService():
     def __init__(self):
         pass
 
-    def DomainContainer(self):
-        return DomainContainer()
+    def DomainFactory(self):
+        return DomainFactory()
     
     def UtilCommon(self):
         return Core_UtilityCommon()

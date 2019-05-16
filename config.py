@@ -6,7 +6,7 @@ ROOT_DIR = os.getcwd()# Get root directory
 sys.path.append(os.path.dirname(ROOT_DIR + r'/'))# Add absolute path to current sys.path
 # print('Path: ' + str(sys.path))
 
-from domains.domain_container import DomainContainer
+from domains.domain_factory import DomainFactory
 
 class Configuration():
     
@@ -15,8 +15,8 @@ class Configuration():
         self.ConfigFileName = "config.json"
         self.ConfigFilePath = Path(ROOT_DIR + r'\\' + self.ConfigFileName)
         self.Platform = self.getOSplatform()
-        self.domain_container = DomainContainer()
-        self.ApiConfigModel = self.domain_container.init_ModelClass('ApiConfigModel')
+        self.domain_factory = DomainFactory()
+        self.ConfigApiModel = self.domain_factory.init_ModelClass('ConfigApiModel')
 
         
     def getOSplatform(self):        
@@ -42,7 +42,7 @@ class Configuration():
                     # print(config)  
                     for cf in list(config['configurations']):
                         if(cf['type'] == "api" and cf['api_name'] == apiName):                            
-                            modelApiConfig = self.domain_container.map_JsonToAnDomainClass(self.ApiConfigModel, cf)
+                            modelApiConfig = self.domain_factory.map_JsonToDomainClass(self.ConfigApiModel, cf)
                             return modelApiConfig
 
         except Exception as ex:

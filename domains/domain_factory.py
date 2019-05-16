@@ -1,15 +1,16 @@
 import inspect
 import sys
 
-
+from domains.analysis_data.ExchangeRateModel import ExchangeRateModel
 from domains.api.ApiOpenExcRateModel import ApiOpenExcRateModel
-from domains.config.ApiConfigModel import ApiConfigModel
-from domains.config.ApiParamConfigModel import ApiParamConfigModel
+from domains.config.ConfigApiModel import ConfigApiModel
+from domains.config.ConfigApiParamModel import ConfigApiParamModel
 
+#Factory Pattern
 """
 doc: Container to declare all entities model
 """
-class DomainContainer():
+class DomainFactory():
 
     def __init__(self):
         pass
@@ -17,7 +18,7 @@ class DomainContainer():
 
     def get_allDomainClassRegistered(self):
 
-        container = [(name, obj) for name, obj in list(inspect.getmembers(sys.modules[__name__], inspect.isclass)) if name not in DomainContainer.__name__]
+        container = [(name, obj) for name, obj in list(inspect.getmembers(sys.modules[__name__], inspect.isclass)) if name not in DomainFactory.__name__]
         return container
             
 
@@ -29,27 +30,15 @@ class DomainContainer():
                 return obj
 
 
-    # def print_ValueDomainClass(self, model):
+    def init_ObjectClass(self, className):
 
-    #     if(model is not None and inspect.isclass(type(model))):
-    #         attrs = [ (key, value) for key, value in inspect.getmembers(model) 
-    #             if (key not in dir(type('dummy', (object,), {}))) 
-    #             and not (key.startswith('_') or key.endswith('_')) 
-    #         ]
-
-    #         for key, value in attrs:
-    #             print(str(key) + ': ' + str(value))
+        clsmembers = self.get_allDomainClassRegistered()
+        for name, obj in clsmembers:
+            if name in className:
+                return obj()
 
 
-    # def print_ValueListDomainClass(self, listmodel):
-
-    #     if(listmodel is not None):
-    #         for item in listmodel:
-    #             print('#'*40)
-    #             self.print_ValueDomainClass(item)
-
-
-    def map_JsonToAnDomainClass(self, modelClass, obj):
+    def map_JsonToDomainClass(self, modelClass, obj):
 
         if modelClass is None or obj is None:
             return None

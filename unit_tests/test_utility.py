@@ -2,6 +2,7 @@ import unittest
 import sys, os
 import urllib
 import urllib.parse
+import datetime
 
 
 ROOT_DIR = os.getcwd()  # Get root directory
@@ -28,7 +29,17 @@ class UtilityTestCase(unittest.TestCase):
 
         self.assertFalse(UtilityTestCase.UtilCommon.validateDateFormat('2016-13-01'), '###Error Message: Not valid')
 
-        self.assertFalse(UtilityTestCase.UtilCommon.validateDateFormat('2019-2-30'), '###Error Message: Not valid')
+        self.assertFalse(UtilityTestCase.UtilCommon.validateDateFormat('2019-02-30'), '###Error Message: Not valid')
+
+
+    def test_common__parseStringToDate(self):
+
+        data = UtilityTestCase.UtilCommon.parseStringToDate('2016-01-15')
+        self.assertIsNotNone(data, '###Error Message: No data')
+
+        data = UtilityTestCase.UtilCommon.parseStringToDate(datetime.date(2019,1,15))
+        self.assertIsNotNone(data, '###Error Message: No data')
+
 
     def test_data__readJsonFromUrl(self):
 
@@ -36,7 +47,6 @@ class UtilityTestCase(unittest.TestCase):
 
         self.assertIsNotNone(data, '###Error Message: No data')
 
-        
        
 
 ###########################################################################################################
