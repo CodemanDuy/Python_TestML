@@ -40,11 +40,13 @@ class ExchangeRateService():
         return None
     
 
-    def __init_apiParamsString(self):
+    def __init_apiParamsString(self, lstParamModel):
         if self.ApiConfig1:
             lstApiParam = self.domain_factory.map_ListJsonToListDomainClass(self.ConfigApiParamModel, self.ApiConfig1.api_params)
             apiStr = ""
             for idx, para in enumerate(lstApiParam):
+                if lstParamModel and len(lstParamModel) > 0:
+                    pr = [pr for pr in lstParamModel if pr.param_name == para.param_name]
                 singleParam = "{0}={1}".format(para.param_name, para.default_value)
                 if(idx == 0):
                     apiStr = singleParam
@@ -54,8 +56,12 @@ class ExchangeRateService():
         return None
 
 
-    def get_exrate_byDate(self, dateReport, baseCurrency):       
-        apiUrl = "{0}{1}{2}?{3}".format(self.__init_apiUrl(), dateReport, self.ApiConfig1.api_extension, self.__init_apiParamsString())
+    def get_exrate_byDate(self, dateReport, baseCurrency):
+        modelBaseCurParam = self.ConfigApiParamModel()    
+        modelBaseCurParam.param_name = "base"
+        modelBaseCurParam.current_value = baseCurrency
+
+        apiUrl = "{0}{1}{2}?{3}".format(self.__init_apiUrl(), dateReport, self.ApiConfig1.api_extension, self.__init_apiParamsString(list(modelBaseCurParam))
         if apiUrl:
             content = self.util_data.readJsonFromUrl(apiUrl)
             return content

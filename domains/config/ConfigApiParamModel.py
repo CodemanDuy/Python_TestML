@@ -25,3 +25,10 @@ class ConfigApiParamModel(object):
     def default_value(self, val):
         self.__default_value = val
 
+    @property
+    def current_value(self):
+        return self.__current_value
+    @current_value.setter
+    def current_value(self, val):
+        self.__current_value = val
+

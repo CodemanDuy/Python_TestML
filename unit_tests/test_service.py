@@ -48,7 +48,7 @@ class ServiceTestCase(unittest.TestCase):
 
         fromDate = '2016-01-1'        
         toDate = '2016-12-30'
-        checkedDate = [15, 5, 10, 20]
+        checkedDate = [15, 1, 5, 10, 20, 25]
         baseCurrency = 'USD'
         toCurrency = 'VND'
 
