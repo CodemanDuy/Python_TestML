@@ -1,4 +1,8 @@
 from datetime import datetime, timedelta, date
+from dateutil.relativedelta import relativedelta
+from dateutil.parser import parse
+import calendar
+import random
 
 
 class Core_UtilityCommon():
@@ -9,11 +13,11 @@ class Core_UtilityCommon():
 
     def validateDateFormat(self, date_text):
         try:
-            if date_text != datetime.strptime(date_text, "%Y-%m-%d").strftime('%Y-%m-%d'):
+            if not parse(date_text, fuzzy=False):
                 raise ValueError
             return True
         except ValueError as ex:
-            print('Error: ', ex)
+            # print('Error: ', ex)
             return False
 
     def parseStringToDate(self, date_text):
@@ -33,20 +37,17 @@ class Core_UtilityCommon():
         try:
             if(type(datetime_text) is date or type(datetime_text) is datetime):              
                 return datetime_text
-            
-            date_time_obj = datetime.strptime(datetime_text, '%Y-%m-%d %H:%M:%S.%f')
-            # print('Date:', date_time_obj.date())  
-            # print('Time:', date_time_obj.time())  
-            # print('Date-time:', date_time_obj)  
-            return date_time_obj
+                       
+            return parse(datetime_text, fuzzy=False)
+
         except Exception as ex:
             print('Error: ', ex)
             return None
 
     def dateRange(self, start_date, end_date):              
         try:
-            start_date = (type(start_date) is str) and self.parseStringToDate(start_date) or start_date
-            end_date = (type(end_date) is str) and self.parseStringToDate(end_date) or end_date                
+            start_date = (type(start_date) is str) and self.parseStringToDateTime(start_date) or start_date
+            end_date = (type(end_date) is str) and self.parseStringToDateTime(end_date) or end_date                
             
             for n in range(int ((end_date - start_date).days + 1)):
                 yield start_date + timedelta(n)
@@ -54,4 +55,36 @@ class Core_UtilityCommon():
             print('Error: ', ex)
             return None   
         
+    def getDateByYearCount(self, date, yearcount):
+        try:            
+            checkedDate = self.parseStringToDateTime(date)
+            return checkedDate + relativedelta(years=yearcount)
+
+        except Exception as ex:
+            print('Error: ', ex)
+            return None   
+    
+    def getDateByMonthCount(self, date, monthcount):
+        try:            
+            checkedDate = self.parseStringToDateTime(date)
+            return checkedDate + relativedelta(months=monthcount)
+         
+        except Exception as ex:
+            print('Error: ', ex)
+            return None   
+
+    def generateRandomDateInMonth(self, year, month, totalRandom = 1):
+        lstDate = []
+        currentTotalDays = calendar.monthrange(year, month)[1]
         
+        if totalRandom <= currentTotalDays:            
+            dt = random.randint(1, currentTotalDays)
+            # check if random number not exist in list and list size must smaller than total random times
+            while(len(lstDate) < totalRandom):
+                if not dt in lstDate:
+                    lstDate.append(dt)
+                dt = random.randint(1, currentTotalDays)
+            
+        return lstDate            
+        
+

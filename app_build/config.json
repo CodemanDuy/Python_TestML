@@ -1,0 +1,53 @@
+{
+    "version": "1.0",    
+    "configurations":[
+        {
+            "type": "project_info",            
+            "project_name": "Test_OnSolve"
+        },
+        {                                
+            "type": "api",
+            "site_name": "openexchangerates",
+            "api_type": "get_exchangerate",            
+            "api_host": "https://openexchangerates.org",            
+            "api_path": "/api/historical/",
+            "api_extension": ".json",         
+            "api_queries": [
+                {
+                    "param_name": "app_id",
+                    "param_defvalue": "e1e21981345b4bbe959f49186802ce97"
+                },
+                {
+                    "param_name": "base",
+                    "param_defvalue": "USD"
+                }
+            ],
+            "is_using": "False"
+        },
+        {       
+            "type": "api",
+            "site_name": "exchangeratesapi",     
+            "api_type": "get_exchangerate",  
+            "api_host": "https://api.exchangeratesapi.io",    
+            "api_path": "/",
+            "api_extension": "",         
+            "api_queries": [               
+                {
+                    "param_name": "base",
+                    "param_defvalue": "USD"
+                }
+            ],
+            "is_using": "True"
+        },
+        {                                
+            "type": "api",
+            "site_name": "openexchangerates",
+            "api_type": "get_currency",            
+            "api_host": "https://openexchangerates.org",            
+            "api_path": "/api/currencies",
+            "api_extension": ".json",         
+            "api_queries": [],
+            "is_using": "True"
+        }
+    ]
+}

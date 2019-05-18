@@ -19,6 +19,8 @@ class ServiceTestCase(unittest.TestCase):
     UtilCommon = Core_UtilityCommon()
     UtilData = Core_UtilityData()
     Config = Configuration()
+    ApiCheckExcRateConfig = Config.getApiConfig("get_exchangerate")
+        
 
     
     # def test_exrate__get_exrate_byDate(self):
@@ -27,7 +29,7 @@ class ServiceTestCase(unittest.TestCase):
     #     baseCurrency = 'USD'
 
     #     service = ExchangeRateService()
-    #     data = service.get_exrate_byDate(datereport, baseCurrency)
+    #     data = service.get_exrate_byDate(ServiceTestCase.ApiCheckExcRateConfig, datereport, baseCurrency)
 
     #     self.assertIsNotNone(data, '###Error Message: No data')
     
@@ -36,10 +38,10 @@ class ServiceTestCase(unittest.TestCase):
 
     #     datereport = '2016-01-15'
     #     baseCurrency = 'USD'
-    #     toCurrency = 'VND'
+    #     toCurrency = 'EUR'
 
     #     service = ExchangeRateService()
-    #     data = service.get_specific_exrate_byDate(datereport, baseCurrency, toCurrency)
+    #     data = service.get_specific_exrate_byDate(ServiceTestCase.ApiCheckExcRateConfig, datereport, baseCurrency, toCurrency)
                
     #     self.assertIsNotNone(data, '###Error Message: No data')
 
@@ -50,13 +52,13 @@ class ServiceTestCase(unittest.TestCase):
         toDate = '2016-12-30'
         checkedDate = [15, 1, 5, 10, 20, 25]
         baseCurrency = 'USD'
-        toCurrency = 'VND'
+        toCurrency = 'AUD'
 
         service = ExchangeRateService()
-        data = service.get_specific_exrate_byDateRange(fromDate, toDate, checkedDate, baseCurrency, toCurrency)
+        data = service.get_specific_exrate_byDateRange(ServiceTestCase.ApiCheckExcRateConfig, fromDate, toDate, checkedDate, baseCurrency, toCurrency)
 
         # service.display_graph(data)
-        service.training_model(data)
+        service.training_linear_model(data)
 
         self.assertIsNotNone(data, '###Error Message: No data')
 

@@ -33,19 +33,19 @@ class ConfigApiModel(object):
 
 
     @property
-    def site_domain(self):
-        return self.__site_domain
-    @site_domain.setter
-    def site_domain(self, val):
-        self.__site_domain = val
+    def api_host(self):
+        return self.__api_host
+    @api_host.setter
+    def api_host(self, val):
+        self.__api_host = val
 
 
     @property
-    def api_url(self):
-        return self.__api_url
-    @api_url.setter
-    def api_url(self, val):
-        self.__api_url = val
+    def api_path(self):
+        return self.__api_path
+    @api_path.setter
+    def api_path(self, val):
+        self.__api_path = val
 
     
     @property
@@ -56,8 +56,8 @@ class ConfigApiModel(object):
         self.__api_extension = val
 
     @property
-    def api_params(self):
-        return self.__api_params
-    @api_params.setter
-    def api_params(self, val):
-        self.__api_params = val
+    def api_queries(self):
+        return self.__api_queries
+    @api_queries.setter
+    def api_queries(self, val):
+        self.__api_queries = val

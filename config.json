@@ -7,35 +7,47 @@
         },
         {                                
             "type": "api",
-            "api_name": "openexchangerates_exchange_rates",
-            "site_name": "openexchangerates",            
-            "site_domain": "https://openexchangerates.org",            
-            "api_url": "/api/historical/",
+            "site_name": "openexchangerates",
+            "api_type": "get_exchangerate",            
+            "api_host": "https://openexchangerates.org",            
+            "api_path": "/api/historical/",
             "api_extension": ".json",         
-            "api_params": [
+            "api_queries": [
                 {
                     "param_name": "app_id",
-                    "default_value": "e1e21981345b4bbe959f49186802ce97"
+                    "param_defvalue": "e1e21981345b4bbe959f49186802ce97"
                 },
                 {
                     "param_name": "base",
-                    "default_value": "USD"
+                    "param_defvalue": "USD"
                 }
-            ]
+            ],
+            "is_using": "False"
         },
         {       
             "type": "api",
-            "api_name": "exchangeratesapi_exchange_rates",
-            "site_name": "exchangeratesapi",            
-            "site_domain": "https://api.exchangeratesapi.io",    
-            "api_url": "/",
-            "api_extension": ".json",         
-            "api_params": [               
+            "site_name": "exchangeratesapi",     
+            "api_type": "get_exchangerate",  
+            "api_host": "https://api.exchangeratesapi.io",    
+            "api_path": "/",
+            "api_extension": "",         
+            "api_queries": [               
                 {
                     "param_name": "base",
-                    "default_value": "USD"
+                    "param_defvalue": "USD"
                 }
-            ]
+            ],
+            "is_using": "True"
+        },
+        {                                
+            "type": "api",
+            "site_name": "openexchangerates",
+            "api_type": "get_currency",            
+            "api_host": "https://openexchangerates.org",            
+            "api_path": "/api/currencies",
+            "api_extension": ".json",         
+            "api_queries": [],
+            "is_using": "True"
         }
     ]
 }

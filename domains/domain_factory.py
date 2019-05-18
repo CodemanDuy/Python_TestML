@@ -4,7 +4,7 @@ import sys
 from domains.analysis_data.ExchangeRateModel import ExchangeRateModel
 from domains.api.ApiOpenExcRateModel import ApiOpenExcRateModel
 from domains.config.ConfigApiModel import ConfigApiModel
-from domains.config.ConfigApiParamModel import ConfigApiParamModel
+from domains.config.ConfigApiQueryModel import ConfigApiQueryModel
 
 #Factory Pattern
 """
