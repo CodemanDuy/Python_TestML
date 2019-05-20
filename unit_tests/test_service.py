@@ -23,32 +23,32 @@ class ServiceTestCase(unittest.TestCase):
         
 
     
-    # def test_exrate__get_exrate_byDate(self):
+    def test_exrate__get_exrate_byDate(self):
 
-    #     datereport = '2016-01-15'
-    #     baseCurrency = 'USD'
+        datereport = '2017-01-15'
+        baseCurrency = 'USD'
 
-    #     service = ExchangeRateService()
-    #     data = service.get_exrate_byDate(ServiceTestCase.ApiCheckExcRateConfig, datereport, baseCurrency)
+        service = ExchangeRateService()
+        data = service.get_exrate_byDate(ServiceTestCase.ApiCheckExcRateConfig, datereport, baseCurrency)
 
-    #     self.assertIsNotNone(data, '###Error Message: No data')
+        self.assertIsNotNone(data, '###Error Message: No data')
     
 
-    # def test_exrate__get_specific_exrate_byDate(self):
+    def test_exrate__get_specific_exrate_byDate(self):
 
-    #     datereport = '2016-01-15'
-    #     baseCurrency = 'USD'
-    #     toCurrency = 'EUR'
+        datereport = '2017-01-15'
+        baseCurrency = 'USD'
+        toCurrency = 'EUR'
 
-    #     service = ExchangeRateService()
-    #     data = service.get_specific_exrate_byDate(ServiceTestCase.ApiCheckExcRateConfig, datereport, baseCurrency, toCurrency)
+        service = ExchangeRateService()
+        data = service.get_specific_exrate_byDate(ServiceTestCase.ApiCheckExcRateConfig, datereport, baseCurrency, toCurrency)
                
-    #     self.assertIsNotNone(data, '###Error Message: No data')
+        self.assertIsNotNone(data, '###Error Message: No data')
 
     
     def test_exrate__get_specific_exrate_byDateRange(self):
 
-        fromDate = '2016-01-1'        
+        fromDate = '2017-01-1'        
         toDate = '2016-12-30'
         checkedDate = [15, 1, 5, 10, 20, 25]
         baseCurrency = 'USD'
@@ -60,6 +60,18 @@ class ServiceTestCase(unittest.TestCase):
         # service.display_graph(data)
         service.training_linear_model(data)
 
+        self.assertIsNotNone(data, '###Error Message: No data')
+
+
+    def test_exrate__predicted_basic_exrate(self):
+
+        datereport = '2017-01-15'
+        baseCurrency = 'USD'
+        toCurrency = 'EUR'
+
+        service = ExchangeRateService()
+        data = service.predicted_basic_exrate(ServiceTestCase.ApiCheckExcRateConfig, datereport, baseCurrency, toCurrency)
+               
         self.assertIsNotNone(data, '###Error Message: No data')
 
         

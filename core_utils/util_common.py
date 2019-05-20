@@ -78,12 +78,14 @@ class Core_UtilityCommon():
         currentTotalDays = calendar.monthrange(year, month)[1]
         
         if totalRandom <= currentTotalDays:            
-            dt = random.randint(1, currentTotalDays)
+            rdt = random.randint(1, currentTotalDays)
+            d = datetime(year, month, rdt)
             # check if random number not exist in list and list size must smaller than total random times
             while(len(lstDate) < totalRandom):
-                if not dt in lstDate:
-                    lstDate.append(dt)
-                dt = random.randint(1, currentTotalDays)
+                if not d in lstDate:
+                    lstDate.append(d)
+                rdt = random.randint(1, currentTotalDays)
+                d = datetime(year, month, rdt)
             
         return lstDate            
         

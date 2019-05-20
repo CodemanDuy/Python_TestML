@@ -27,15 +27,16 @@ class Main():
 
             print("Welcome to Exchange Rates Service!")
             option = input("Which services do you want to use?: \
-                \n1. Predict tight range of matching (Quick process) \
-                \n2. Predict wide range of matching (Long process) \
-                \n3. Check exchange rates of specific currency \
-                \n4. Check all exchange rates \
+                \n1 - Predict basic matching (Extreme Quick process) \
+                \n2 - Predict tight range of matching (Quick process) \
+                \n3 - Predict wide range of matching (Long process) \
+                \n4 - Check exchange rates of specific currency \
+                \n5 - Check all exchange rates \
                 \nAny key to quit... \
                 \nPlease input your choice's number: ").strip()
            
 
-            while ( option.isdigit() and int(option) > 0 and int(option) < 5 ):
+            while ( option.isdigit() and int(option) > 0 and int(option) < 6 ):
                 option = int(option)
 
                 checkedDate = input("Which date do you want to check? (YYYY-MM-DD): ").strip()
@@ -46,25 +47,32 @@ class Main():
                     self.validateInput(option, checkedDate, baseCurrency, toCurrency)
 
                     service = ExchangeRateService()
-                    data = service.predicted_quick_exrate(self.ApiGetExcRateConfig, self.checkedDate, self.baseCurrency, self.toCurrency)
+                    data = service.predicted_basic_exrate(self.ApiGetExcRateConfig, self.checkedDate, self.baseCurrency, self.toCurrency)
                     service.display_graph(data)
 
-                elif(option == 2):
+                if(option == 2):
                     self.validateInput(option, checkedDate, baseCurrency, toCurrency)
-                    checkedDaysPerMonth = 10
 
                     service = ExchangeRateService()
-                    data = service.predicted_long_exrate(self.ApiGetExcRateConfig, self.checkedDate, self.baseCurrency, self.toCurrency, checkedDaysPerMonth)
+                    data = service.predicted_quick_exrate_bytrainnedmodel(self.ApiGetExcRateConfig, self.checkedDate, self.baseCurrency, self.toCurrency)
                     service.display_graph(data)
 
                 elif(option == 3):
+                    self.validateInput(option, checkedDate, baseCurrency, toCurrency)
+                    checkedDaysPerMonth = 6
+
+                    service = ExchangeRateService()
+                    data = service.predicted_long_exrate_bytrainnedmodel(self.ApiGetExcRateConfig, self.checkedDate, self.baseCurrency, self.toCurrency, checkedDaysPerMonth)
+                    service.display_graph(data)
+
+                elif(option == 4):
                     self.validateInput(option, checkedDate, baseCurrency, toCurrency)
                     
                     service = ExchangeRateService()
                     data = service.get_specific_exrate_byDate(self.ApiGetExcRateConfig, self.checkedDate, self.baseCurrency, self.toCurrency)
                     print(str(data.Currency) + " - " +  str(data.RateValue))
 
-                elif(option == 4):
+                elif(option == 5):
                     self.validateInput(option, checkedDate, baseCurrency, toCurrency)
                     
                     service = ExchangeRateService()
@@ -77,10 +85,11 @@ class Main():
                 print("-"*30 + "PROCESS DONE" + "-"*30)
                 
                 option = input("Which services do you want to use?: \
-                \n1. Predict tight range of matching (Quick process) \
-                \n2. Predict wide range of matching (Long process) \
-                \n3. Check exchange rates of specific currency \
-                \n4. Check all exchange rates \
+                \n1 - Predict basic matching (Extreme Quick process) \
+                \n2 - Predict tight range of matching (Quick process) \
+                \n3 - Predict wide range of matching (Long process) \
+                \n4 - Check exchange rates of specific currency \
+                \n5 - Check all exchange rates \
                 \nAny key to quit... \
                 \nPlease input your choice's number: ").strip()
 
@@ -93,14 +102,15 @@ class Main():
     def validateInput(self, option, checkedDate, baseCurrency, toCurrency):
         self.baseCurrency = (not baseCurrency) and 'USD' or str(baseCurrency).upper()
         
-        currentDate = datetime.date.today()
+        currentDate = datetime.datetime.today()
         if ExchangeRateService().UtilCommon().validateDateFormat(checkedDate):
-            checkedDate = ExchangeRateService().UtilCommon().parseStringToDateTime(checkedDate).date()
+            checkedDate = ExchangeRateService().UtilCommon().parseStringToDateTime(checkedDate)
             self.checkedDate = (checkedDate >= currentDate) and currentDate or checkedDate
         else:                
             self.checkedDate = currentDate
 
-        if(option == 1 or option == 2 or option == 3):
+        optionNeedToCurreny = [1,2,3,4]
+        if(option in optionNeedToCurreny):
             self.toCurrency = toCurrency
             countFail = 0
             while not toCurrency:
@@ -121,7 +131,8 @@ if __name__ == '__main__':
 
 
 ### BUILD APP
-# Step 1: Put all images folder to "dist" folder (folder to deploy app) 
-# Step 2: Open CMD/Terminal and change directory path to main python script
-# Step 3: Run command in first time => pyinstaller --clean --distpath=./app_build --workpath=./temp --onefile --name ExchangeRatesPrediction ./__main__.py
+# Step 1: Put all neccessary media/config files to build folder (folder to deploy app) 
+# Step 2: Open CMD/Terminal and change directory path to main python script (__main__.py)
+# Step 3: Run command pip install these packages: pyinstaller, tornado, pypiwin32
+# Step 4: Run command in first time => pyinstaller --clean --distpath=./app_build --workpath=./temp --onefile --name ExchangeRatesPrediction ./__main__.py
 # Or Run this command when already have .spec file => pyinstaller --clean --distpath=./app_build --workpath=./temp --add-data="config.json;." --add-data="/model_trained/linear_model.pkl;." --onefile ExchangeRatesPrediction.spec

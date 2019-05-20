@@ -8,6 +8,7 @@ sys.path.append(os.path.dirname(ROOT_DIR + r'/'))# Add absolute path to current 
 
 from core_utils.util_common import Core_UtilityCommon
 from core_utils.util_data import Core_UtilityData
+from core_utils.util_logic import Core_UtilityLogic
 
 from domains.domain_factory import DomainFactory
 from config import Configuration
@@ -30,6 +31,9 @@ class BaseService():
 
     def UtilData(self):
         return Core_UtilityData()
+
+    def UtilLogic(self):
+        return Core_UtilityLogic()
 
 
         

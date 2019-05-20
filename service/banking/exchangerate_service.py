@@ -27,7 +27,8 @@ class ExchangeRateService(BaseService):
         self.base_service = BaseService()        
         self.domain_factory = self.base_service.DomainFactory()
         self.util_common = self.base_service.UtilCommon()
-        self.util_data = self.base_service.UtilData()        
+        self.util_data = self.base_service.UtilData()
+        self.util_logic = self.base_service.UtilLogic()       
         
         self.ConfigApiModel = self.domain_factory.init_ModelClass('ConfigApiModel')
         self.ConfigApiQueryModel = self.domain_factory.init_ModelClass('ConfigApiQueryModel')
@@ -43,7 +44,8 @@ class ExchangeRateService(BaseService):
         lstCustomizeQuery = []
         lstCustomizeQuery.append(modelBaseCurParam)
         
-        apiUrl = self.base_service.Config.initApiUrl(apiConfig, dateReport, lstCustomizeQuery)
+        dateReport = self.util_common.parseStringToDateTime(dateReport)
+        apiUrl = self.base_service.Config.initApiUrl(apiConfig, dateReport.date(), lstCustomizeQuery)
         if apiUrl:
             content = self.util_data.readJsonFromUrl(apiUrl)
             lstRates = []
@@ -74,19 +76,20 @@ class ExchangeRateService(BaseService):
         # print('Checked Date: Exchange Rates')  
         lstExcRates = []
         for single_date in self.util_common.dateRange(fromDate, toDate):
-            if any(da == single_date.day for da in checkedDate):             
+            if any(da == single_date.day for da in [d.day for d in checkedDate]):             
                 data = self.get_specific_exrate_byDate(apiConfig, single_date.strftime("%Y-%m-%d"), baseCurrency, toCurrency)  
                 # print(single_date.strftime("%Y-%m-%d") + ': ' + str(data.RateValue))         
 
                 model = self.ExchangeRateModel()
                 model.BaseCurrency = baseCurrency
                 model.ConvertedCurrency = toCurrency
-                model.OnDate = single_date.month#datetime.timestamp(single_date)#convert datetime to timestamp
+                model.OnDate = datetime.timestamp(single_date) #single_date.month
                 model.RateValue = data.RateValue
 
                 lstExcRates.append(model)
 
         return len(lstExcRates) > 0 and lstExcRates or None
+
 
     def display_graph(self, listdata):       
 
@@ -101,6 +104,7 @@ class ExchangeRateService(BaseService):
         plt.xlabel("Date")
         plt.ylabel("Rates")
         plt.show()
+
 
     def training_linear_model(self, listdata):
         date = [[x.OnDate] for x in listdata]
@@ -128,14 +132,24 @@ class ExchangeRateService(BaseService):
         print("Predicted: ", predicted)
 
         return predicted
+
+    
+    def calculate_exrate_forSpecificDate(self, listdata, checkedDate):
+        date = [x.OnDate for x in listdata]
+        rate = [x.RateValue for x in listdata]
+        chkDate = datetime.timestamp(checkedDate)
+
+        predictedRate = self.util_logic.calLinearRegressionOfY(lstSampleValueX=date, lstSampleValueY=rate, xVal=chkDate)
+
+        return predictedRate
     
 
-    def predicted_quick_exrate(self, apiConfig, strPredictedDate, baseCurrency, toCurrency):
+    def predicted_quick_exrate_bytrainnedmodel(self, apiConfig, strPredictedDate, baseCurrency, toCurrency):
         predictedDate = self.util_common.parseStringToDateTime(strPredictedDate)
         dateLastMonth = self.util_common.getDateByYearCount(strPredictedDate, -1)
         dateLastYear = self.util_common.getDateByMonthCount(strPredictedDate, -1)
         checkedDate = []
-        checkedDate.append(predictedDate.day)
+        checkedDate.append(predictedDate)
         
 
         data = self.get_specific_exrate_byDateRange(apiConfig, dateLastMonth, dateLastYear, checkedDate, baseCurrency, toCurrency)
@@ -144,13 +158,14 @@ class ExchangeRateService(BaseService):
 
         return data
 
-    def predicted_long_exrate(self, apiConfig, strPredictedDate, baseCurrency, toCurrency, checkedDaysPerMonth=5):
+
+    def predicted_long_exrate_bytrainnedmodel(self, apiConfig, strPredictedDate, baseCurrency, toCurrency, checkedDaysPerMonth=5):
         predictedDate = self.util_common.parseStringToDateTime(strPredictedDate)
         dateLastMonth = self.util_common.getDateByYearCount(strPredictedDate, -1)
         dateLastYear = self.util_common.getDateByMonthCount(strPredictedDate, -1)
         checkedDate = self.util_common.generateRandomDateInMonth(year=predictedDate.year, month=predictedDate.month, totalRandom=checkedDaysPerMonth)
-        if not predictedDate.day in checkedDate:
-            checkedDate.append(predictedDate.day)
+        if not predictedDate in checkedDate:
+            checkedDate.append(predictedDate)
 
 
         data = self.get_specific_exrate_byDateRange(apiConfig, dateLastMonth, dateLastYear, checkedDate, baseCurrency, toCurrency)
@@ -159,6 +174,22 @@ class ExchangeRateService(BaseService):
 
         return data
 
+    
+    def predicted_basic_exrate(self, apiConfig, strPredictedDate, baseCurrency, toCurrency):
+        predictedDate = self.util_common.parseStringToDateTime(strPredictedDate)
+        dateLastMonth = self.util_common.getDateByYearCount(strPredictedDate, -1)
+        dateLastYear = self.util_common.getDateByMonthCount(strPredictedDate, -1)
+        checkedDate = []
+        checkedDate.append(predictedDate)        
+
+        data = self.get_specific_exrate_byDateRange(apiConfig, dateLastMonth, dateLastYear, checkedDate, baseCurrency, toCurrency)
+
+        predictedRate = self.calculate_exrate_forSpecificDate(data, predictedDate)
+        print("Predicted: ", predictedRate)
+
+        return data
+
+    
 
     
      

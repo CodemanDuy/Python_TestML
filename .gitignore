@@ -1,4 +1,6 @@
 __pycache__
-.vscode/settings.json
+.vscode
 temp
 *.pkl
+app_build/model_trained
+app_build/ExchangeRatesPrediction.exe
