@@ -75,6 +75,17 @@ class UtilityTestCase(unittest.TestCase):
 
         self.assertIsNotNone(data, '###Error Message: No data')
 
+    def test_logic__calPolynomialRegressionOfY(self):
+                
+        lstX = [-6, -4, -2, 0, 2, 4, 6]
+        lstY = [2.28, 1.42, 0.67, 0, -0.57, -1.05, -1.42]
+        x = -7.72
+
+        data = UtilityTestCase.UtilLogic.calPolynomialRegressionOfY(lstX, lstY, x)
+        print(data)
+
+        self.assertIsNotNone(data, '###Error Message: No data')
+
        
 
 ###########################################################################################################

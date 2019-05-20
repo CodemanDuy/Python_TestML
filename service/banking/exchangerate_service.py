@@ -1,11 +1,15 @@
 import os, sys
 import inspect, types
 from datetime import timedelta, date, datetime
+from array import *
 
 import matplotlib.pyplot as plt
 
 import sklearn.utils._cython_blas
+from sklearn import linear_model
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 import joblib
 from pathlib import Path
@@ -106,12 +110,13 @@ class ExchangeRateService(BaseService):
         plt.show()
 
 
-    def training_linear_model(self, listdata):
+    def training_linear_model(self, listdata, valueNeedPredict):
         date = [[x.OnDate] for x in listdata]
         rate = [[x.RateValue] for x in listdata]
 
         #Use 80% of data as training, rest 20% to Test model
         x_train, x_test, y_train, y_test = train_test_split(date, rate, test_size=0.2)
+
         # training model
         linear = LinearRegression()
         linear.fit(x_train, y_train)
@@ -125,8 +130,10 @@ class ExchangeRateService(BaseService):
         joblib.dump(linear, modelPathDir)
 
         # loading model
+        not valueNeedPredict and x_test or x_test.insert(0, [valueNeedPredict])
         clf = joblib.load(modelPathDir)
         predicted = clf.predict(x_test)#linear.predict(x_test)
+        print("###Predicted by Linear Model")
         print("Predicted Max:", predicted.max())
         print("Predicted Min:", predicted.min())
         print("Predicted: ", predicted)
@@ -134,12 +141,54 @@ class ExchangeRateService(BaseService):
         return predicted
 
     
-    def calculate_exrate_forSpecificDate(self, listdata, checkedDate):
+    def training_polynomial_model(self, listdata, valueNeedPredict):
+        date = [[x.OnDate] for x in listdata]
+        rate = [[x.RateValue] for x in listdata]
+
+        #Use 80% of data as training, rest 20% to Test model
+        x_train, x_test, y_train, y_test = train_test_split(date, rate, test_size=0.2)
+
+        # training model
+        poly = Pipeline([('poly', PolynomialFeatures(interaction_only=True, degree=2)),
+                       ('linear', linear_model.LinearRegression(fit_intercept=False))])
+        poly.fit(x_train, y_train)
+
+        # evaluating model
+        score_trained = poly.score(x_test, y_test)
+        print("Model scored:", score_trained)
+       
+        # saving model
+        modelPathDir = Path(ROOT_DIR + r'/model_trained/poly_model.pkl')
+        joblib.dump(poly, modelPathDir)
+
+        # loading model
+        not valueNeedPredict and x_test or x_test.insert(0, [valueNeedPredict])
+        clf = joblib.load(modelPathDir)
+        predicted = clf.predict(x_test)#poly.predict(x_test)
+        print("###Predicted by Polynomial Model")
+        print("Predicted Max:", predicted.max())
+        print("Predicted Min:", predicted.min())
+        print("Predicted: ", predicted)
+
+        return predicted
+
+    
+    def calculate_exrate_bypurelinearmodel(self, listdata, checkedDate):
         date = [x.OnDate for x in listdata]
         rate = [x.RateValue for x in listdata]
         chkDate = datetime.timestamp(checkedDate)
 
         predictedRate = self.util_logic.calLinearRegressionOfY(lstSampleValueX=date, lstSampleValueY=rate, xVal=chkDate)
+
+        return predictedRate
+
+
+    def calculate_exrate_bypurepolynomialmodel(self, listdata, checkedDate):
+        date = [x.OnDate for x in listdata]
+        rate = [x.RateValue for x in listdata]
+        chkDate = datetime.timestamp(checkedDate)
+
+        predictedRate = self.util_logic.calPolynomialRegressionOfY(lstSampleValueX=date, lstSampleValueY=rate, xVal=chkDate)
 
         return predictedRate
     
@@ -154,7 +203,8 @@ class ExchangeRateService(BaseService):
 
         data = self.get_specific_exrate_byDateRange(apiConfig, dateLastMonth, dateLastYear, checkedDate, baseCurrency, toCurrency)
 
-        self.training_linear_model(data)
+        self.training_linear_model(data, datetime.timestamp(predictedDate))
+        self.training_polynomial_model(data, datetime.timestamp(predictedDate))
 
         return data
 
@@ -170,7 +220,8 @@ class ExchangeRateService(BaseService):
 
         data = self.get_specific_exrate_byDateRange(apiConfig, dateLastMonth, dateLastYear, checkedDate, baseCurrency, toCurrency)
 
-        self.training_linear_model(data)
+        self.training_linear_model(data, datetime.timestamp(predictedDate))
+        self.training_polynomial_model(data, datetime.timestamp(predictedDate))
 
         return data
 
@@ -184,8 +235,10 @@ class ExchangeRateService(BaseService):
 
         data = self.get_specific_exrate_byDateRange(apiConfig, dateLastMonth, dateLastYear, checkedDate, baseCurrency, toCurrency)
 
-        predictedRate = self.calculate_exrate_forSpecificDate(data, predictedDate)
-        print("Predicted: ", predictedRate)
+        predictedRate = self.calculate_exrate_bypurelinearmodel(data, predictedDate)
+        print("Predicted with Linear Regression Model: ", predictedRate)
+        predictedRate2 = self.calculate_exrate_bypurepolynomialmodel(data, predictedDate)
+        print("Predicted with Polynomial Regression Model: ", predictedRate2)
 
         return data
 

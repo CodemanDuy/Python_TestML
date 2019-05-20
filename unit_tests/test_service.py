@@ -2,6 +2,7 @@ import unittest
 import sys, os
 import urllib
 import urllib.parse
+import datetime
 
 
 ROOT_DIR = os.getcwd()  # Get root directory
@@ -58,7 +59,7 @@ class ServiceTestCase(unittest.TestCase):
         data = service.get_specific_exrate_byDateRange(ServiceTestCase.ApiCheckExcRateConfig, fromDate, toDate, checkedDate, baseCurrency, toCurrency)
 
         # service.display_graph(data)
-        service.training_linear_model(data)
+        service.training_linear_model(data, datetime.datetime.timestamp( datetime.datetime(year=2017, month=1, day=checkedDate[0]) ))
 
         self.assertIsNotNone(data, '###Error Message: No data')
 

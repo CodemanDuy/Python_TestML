@@ -59,7 +59,7 @@ class Main():
 
                 elif(option == 3):
                     self.validateInput(option, checkedDate, baseCurrency, toCurrency)
-                    checkedDaysPerMonth = 6
+                    checkedDaysPerMonth = 20
 
                     service = ExchangeRateService()
                     data = service.predicted_long_exrate_bytrainnedmodel(self.ApiGetExcRateConfig, self.checkedDate, self.baseCurrency, self.toCurrency, checkedDaysPerMonth)
