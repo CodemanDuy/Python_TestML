@@ -27,10 +27,10 @@ class Main():
 
             print("Welcome to Exchange Rates Service!")
             option = input("Which services do you want to use?: \
-                \n1. Predict tight range of matching (Quick process) \
-                \n2. Predict wide range of matching (Long process) \
-                \n3. Check exchange rates of specific currency \
-                \n4. Check all exchange rates \
+                \n1 - Predict tight range of matching (Quick process) \
+                \n2 - Predict wide range of matching (Long process) \
+                \n3 - Check exchange rates of specific currency \
+                \n4 - Check all exchange rates \
                 \nAny key to quit... \
                 \nPlease input your choice's number: ").strip()
            
@@ -77,10 +77,10 @@ class Main():
                 print("-"*30 + "PROCESS DONE" + "-"*30)
                 
                 option = input("Which services do you want to use?: \
-                \n1. Predict tight range of matching (Quick process) \
-                \n2. Predict wide range of matching (Long process) \
-                \n3. Check exchange rates of specific currency \
-                \n4. Check all exchange rates \
+                \n1 - Predict tight range of matching (Quick process) \
+                \n2 - Predict wide range of matching (Long process) \
+                \n3 - Check exchange rates of specific currency \
+                \n4 - Check all exchange rates \
                 \nAny key to quit... \
                 \nPlease input your choice's number: ").strip()
 
@@ -121,7 +121,8 @@ if __name__ == '__main__':
 
 
 ### BUILD APP
-# Step 1: Put all images folder to "dist" folder (folder to deploy app) 
-# Step 2: Open CMD/Terminal and change directory path to main python script
-# Step 3: Run command in first time => pyinstaller --clean --distpath=./app_build --workpath=./temp --onefile --name ExchangeRatesPrediction ./__main__.py
+# Step 1: Put all neccessary media/config files to build folder (folder to deploy app) 
+# Step 2: Open CMD/Terminal and change directory path to main python script (__main__.py)
+# Step 3: Run command pip install these packages: pyinstaller, tornado, pypiwin32
+# Step 4: Run command in first time => pyinstaller --clean --distpath=./app_build --workpath=./temp --onefile --name ExchangeRatesPrediction ./__main__.py
 # Or Run this command when already have .spec file => pyinstaller --clean --distpath=./app_build --workpath=./temp --add-data="config.json;." --add-data="/model_trained/linear_model.pkl;." --onefile ExchangeRatesPrediction.spec
